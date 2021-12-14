@@ -1,13 +1,11 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const products = require('./data/product.json');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -18,9 +16,26 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'node_modules/bootstrap/dist')))
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.get('/', (request, response) => {
+  let data = products.map(product => {
+    return {title:product.name, subtitle : product.price, picture:product.picture};
+  })
+  response.render('card-list', {title : 'Home', data});
+});
+
+app.get('/about-us', (request, response) => {
+  let persons = [
+    {name : 'Steph', age : 46 }, 
+    {name : 'Beaura', age : 32 }, 
+    {name : 'JB', age : 33 }, 
+  ]
+  persons = persons.map(person => {
+    return {title:person.name, subtitle:person.age};
+  });
+  response.render('card-list', {title : 'About Us', data : persons});
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
