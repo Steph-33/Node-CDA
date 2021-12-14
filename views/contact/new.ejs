@@ -1,0 +1,18 @@
+<%- include('../_partials/_layout-start.ejs') %>
+
+<form action="/contact-us" method="post">
+  <div>
+    <label class="form-label" for="name">Name</label>
+    <input class="form-control" type="text" id="name" name="name">
+  </div>
+  <div>
+    <label class="form-label" for="email">email</label>
+    <input class="form-control" type="text" id="email" name="email">
+  </div>
+  
+  <div>
+    <input type="submit" value="Envoyer" class="btn btn-success">
+  </div>
+</form>
+
+<%- include('../_partials/_layout-end.ejs') %>
