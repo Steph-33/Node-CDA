@@ -1,13 +1,41 @@
-const express = require('express');
-const router = express.Router();
+const app = require('express');
+const Contact = require('../model/contact');
+const router = app.Router();
 
 router.get('/', (request, response) => {
-    response.render('contact/new', { title: 'Contact us' });
-  })
+  response.render('contact/new', { title: 'Contact us' });
+});
 
 router.post('/', (request, response) => {
-  console.log(`${request.body.name} - ${request.body.email}`);
-  response.redirect('/contact-us');
-})
+  ['name', 'email'].forEach(property => {
+    if (!request.body[property]) {
+      response.render('contact/new', {
+        title: 'Contact us',
+        error: {
+          property,
+          message: `${property} is required!`
+        }
+      });
 
-module.exports=router;
+      return;
+    }
+  });
+
+  let contact = new Contact(request.body);
+
+  contact.save();
+
+  response.redirect('/contact-us');
+});
+
+router.get('/list', (request, response) => {
+  Contact.find()
+    .then(data => {
+      console.log(data);
+    })
+    .catch(error => console.error(error));
+
+  response.send('ok');
+});
+
+module.exports = router;
