@@ -21,6 +21,8 @@ router.post('/', (request, response) => {
     }
   });
 
+  request.session.name = request.body.name;
+
   let contact = new Contact(request.body);
 
   contact.save();

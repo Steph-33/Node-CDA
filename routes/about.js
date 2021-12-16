@@ -11,6 +11,6 @@ router.get('/', (request, response) => {
       return {title:person.name, subtitle:person.age};
     });
     response.render('card-list', {title : 'About Us', data : persons});
-  });
+});
 
 module.exports = router;

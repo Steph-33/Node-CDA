@@ -6,39 +6,60 @@
   </div>
 <% } %>
 
-<form action="/product" method="post">
+<form method="post">
   <div>
     <label class="form-label" for="name">Name</label>
-    <input class="form-control" type="text" id="name" name="name">
+    <input class="form-control" type="text" id="name" name="name"
+    <% if (locals.product) {%> value="<%= product.name %>" <% } %>
+    >
   </div>
   <div>
     <label class="form-label" for="price">Price</label>
-    <input class="form-control" type="number" id="price" name="price">
+    <input class="form-control" type="number" id="price" name="price"
+    <% if (locals.product) {%> value="<%= product.price %>" <% } %>
+    >
   </div>
   <div>
     <label class="form-label" for="stock">Stock</label>
-    <input class="form-control" type="number" id="stock" name="stock">
+    <input class="form-control" type="number" id="stock" name="stock"
+    <% if (locals.product) {%> value="<%= product.stock %>" <% } %>
+    >
   </div>
   <div>
     <label class="form-label" for="picture">Picture</label>
-    <input class="form-control" type="text" id="picture" name="picture">
+    <input class="form-control" type="text" id="picture" name="picture"
+    <% if (locals.product) {%> value="<%= product.picture %>" <% } %>
+    >
   </div>
   <hr>
   <div>
-    <input type="submit" value="Ajouter" class="btn btn-success">
+    <input type="submit" value="<%= locals.product ? 'Modifier' : 'Ajouter'%>" class="btn btn-success">
   </div>
 </form>
 
-<% data.forEach(datum => { %>
+<% data.forEach((datum, index) => { %>
   <div style="display: flex;margin-bottom: 2rem;align-items: center;">
     <div style="display: flex;">
-      <%=data.indexOf(datum)+1%>
+      <%=index+1%>
       <div style="align-items: center;margin-right: 1rem;">-</div>
-      <%=datum.title%>
+      <div style="width: 20rem;">
+        <%=datum.title%>
+      </div>
+      <div style="width: 10rem;">
+        <%=datum.subtitle%>€
+      </div>
+      <div style="width: 10rem;">
+        <%=datum.stock%> pièces en stock
+      </div>
+      <div style="width: 2rem;">
+        <img src="<%= datum.picture %>" style="width: 3rem;" alt="Image <%=datum.title%>">
+      </div>
     </div>
     <div style="display: flex;width: 20rem; margin-left: 5rem; justify-content: space-around;">
-      <input type="submit" value="Modifier" class="btn btn-primary">
-      <input type="submit" value="Supprimer" class="btn btn-danger">
+      <a href="/product/<%= datum.id %>/edit" class="btn btn-primary">Modifier</a>
+      <form action="/product/<%= datum.id %>/delete" method="post">
+        <input type="submit" class="btn btn-danger" value="Supprimer">
+      </form>
     </div>
   </div>
 <% }) %>

@@ -10,7 +10,7 @@ router.get('/:id', (request, response) => {
       /** @todo return 404 */
       response.render('product/article-details', {
         title: product.name, datum: {
-          id: product.id, picture: product.picture, title: product.name, subtitle: product.price
+          id: product._id, picture: product.picture, title: product.name, subtitle: product.price
         }
       });
     }
@@ -18,25 +18,7 @@ router.get('/:id', (request, response) => {
   .catch(error => console.error(error));
 });
 
-router.get('/', (request, response) => {
-  Product.find()
-      .then(products => {
-        let data = products.map(product => {
-        return {
-            id : product._id, 
-            title : product.name,
-            subtitle : product.price,
-            picture : product.picture, 
-            primaryCta: `/product/${product.id}`,
-            primaryCtaLabel: 'Détails'
-        }
-      })
-      console.log('data ===============> ', data)
-      response.render('product/product-create', { title: 'Add Product', data})
-    })
-    .catch(error => console.error(error));
-});
-
+// Envoi des produits dans la BDD. 
 router.post('/', (request, response) => {
     ['name', 'price', 'stock', 'picture'].forEach(property => {
       if (!request.body[property]) {
@@ -57,6 +39,66 @@ router.post('/', (request, response) => {
     product.save();
   
     response.redirect('/product');
+});
+
+// Affichage des données sous le formulaire produit. 
+router.get('/', (request, response) => {
+  Product.find()
+      .then(products => {
+        let data = products.map(product => {
+        return {
+            id : product._id, 
+            title : product.name,
+            subtitle : product.price,
+            stock : product.stock,
+            picture : product.picture, 
+            primaryCta: `/product/${product.id}`,
+            primaryCtaLabel: 'Détails'
+        }
+      })
+      response.render('product/product-create', { title: 'Add Product', data})
+    })
+    .catch(error => console.error(error));
+});
+
+// Modifier un produit dans la BDD
+router.get('/:id/edit', (request, response) => {
+  Product.findById(request.params.id)
+    .then(product => {
+      Product.find()
+        .then(products => {
+          let data = products.map(product => {
+            return {
+                id : product._id, 
+                title : product.name,
+                subtitle : product.price,
+                stock : product.stock,
+                picture : product.picture, 
+                primaryCta: `/product/${product._id}`,
+                primaryCtaLabel: 'Détails'
+            }
+          })
+          response.render('product/product-create', { title: 'Products administration', data, product })
+        })
+        .catch(error => console.error(error));
+    })
+    .catch(error => console.error(error));
+})
+
+router.post('/:id/edit', (request, response) => {
+  Product.findOneAndUpdate({ _id: request.params.id }, request.body)
+    .then(() => response.redirect('/product'))
+    .catch(error => console.error(error));
+})
+
+// Suppression d'un produit dans la BDD. 
+router.post('/:id/delete', (request, response) => {
+  let id = request.params.id;
+  Product.findByIdAndRemove(id)
+      .then(
+        response.redirect('/product')
+      )
+      .catch(error => console.error(error));
 });
 
 /**

@@ -4,6 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
+const session = require('express-session');
 
 const indexRouter = require('./routes/index');
 const aboutRouter = require('./routes/about');
@@ -22,10 +23,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules/bootstrap/dist')))
+app.use(session({ secret: process.env.SECRET, resave : true, saveUninitialized:true }));
 
 mongoose.connect(process.env.DB_URL)
 .then(()=>console.log('DB Connected'))
 .catch(error => console.error(error));
+
+app.use((request, response, next) => {
+  app.locals.username = request.session.name;
+  next();
+})
 
 app.use('/', indexRouter);
 app.use('/about-us', aboutRouter);
