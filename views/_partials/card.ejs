@@ -6,6 +6,16 @@
       <% if (datum.primaryCta) { %>
         <a href="<%= datum.primaryCta %>" class="btn btn-primary"><%= datum.primaryCtaLabel %></a>
       <% } %>
+      
+      <% if (datum.secondaryCta) { %>
+        <hr>
+        <form action="/cart/add/<%=datum.id%>" method="post">
+          <div style="display: flex;">
+            <input style="width: 5rem; margin-right: 3rem;" value="1" type="number" id="quantity" name="quantity" min="0">
+            <input type="submit" class="btn btn-success" value="Acheter">  
+          </div>
+        </form>
+      <% } %>
     </div>
   </div>
   

@@ -10,6 +10,8 @@ const indexRouter = require('./routes/index');
 const aboutRouter = require('./routes/about');
 const contactRouter = require('./routes/contact');
 const productRouter = require('./routes/product');
+const cartRouter = require('./routes/cart');
+const checkoutRouter = require('./routes/checkout');
 
 const app = express();
 
@@ -30,7 +32,9 @@ mongoose.connect(process.env.DB_URL)
 .catch(error => console.error(error));
 
 app.use((request, response, next) => {
-  app.locals.username = request.session.name;
+  if (!request.session.cart) {
+    request.session.cart = [];
+  }
   next();
 })
 
@@ -38,6 +42,8 @@ app.use('/', indexRouter);
 app.use('/about-us', aboutRouter);
 app.use('/contact-us', contactRouter);
 app.use('/product', productRouter);
+app.use('/cart', cartRouter);
+app.use('/checkout', checkoutRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

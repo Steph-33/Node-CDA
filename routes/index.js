@@ -14,7 +14,8 @@ router.get('/', (request, response) => {
             stock : product.stock,
             picture : product.picture, 
             primaryCta: `/product/${product.id}`,
-            primaryCtaLabel: 'Détails'
+            primaryCtaLabel: 'Détails',
+            secondaryCta : true
         }
       })
       response.render('card-list', { title: 'Home', data})

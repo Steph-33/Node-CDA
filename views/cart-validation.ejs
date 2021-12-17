@@ -1,0 +1,20 @@
+<%- include('./_partials/_layout-start.ejs') %>
+
+<form method="post">
+    <div>
+      <label class="form-label" for="name">Nom</label>
+      <input class="form-control" type="text" id="name" name="name"
+      >
+    </div>
+    <div>
+      <label class="form-label" for="address">Adresse</label>
+      <input class="form-control" type="text" id="address" name="address"
+      >
+    </div>
+    <hr>
+    <div>
+      <input type="submit" value="Valider l'achat" class="btn btn-success">
+    </div>
+  </form>
+  
+<%- include('./_partials/_layout-end.ejs') %>
